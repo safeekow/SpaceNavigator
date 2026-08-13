@@ -68,7 +68,15 @@ namespace SpaceNavigatorDriver
 
         private static void Update()
         {
-            if (SpaceNavigatorHID.current == null) return;
+            switch (Application.platform)
+            {
+                case RuntimePlatform.LinuxEditor:
+                    if (!SpaceNavigatorLinuxDriver.IsConnected) return;
+                    break;
+                default: 
+                    if (SpaceNavigatorHID.current == null) return;
+                    break;
+            }
 
             // Autosave settings.
             if (!Application.isPlaying && DateTime.Now - _lastSaveTime > _saveInterval)
@@ -81,7 +89,11 @@ namespace SpaceNavigatorDriver
             bool hasFocus = EditorApplication.isFocused;
             if (Settings.ToggleLedWhenFocusChanged && _hadFocus != hasFocus)
             {
-                SpaceNavigatorHID.current.SetLEDStatus(hasFocus ? SpaceNavigatorHID.LedStatus.On : SpaceNavigatorHID.LedStatus.Off);
+                var statusToSet = hasFocus ? SpaceNavigatorHID.LedStatus.On : SpaceNavigatorHID.LedStatus.Off;
+                if (Application.platform == RuntimePlatform.LinuxEditor)
+                    SpaceNavigatorLinuxDriver.SetLEDStatus(statusToSet);
+                else
+                    SpaceNavigatorHID.current.SetLEDStatus(statusToSet);
                 _hadFocus = hasFocus;
             }
             // Don't navigate if the Unity Editor doesn't have focus.
@@ -104,8 +116,16 @@ namespace SpaceNavigatorDriver
                 StraightenHorizon();
             _wasHorizonLocked = Settings.HorizonLock;
 
-            Settings.TranslationDrift ??= SpaceNavigatorHID.current.Translation.ReadValue();
-            Settings.RotationDrift ??= SpaceNavigatorHID.current.Rotation.ReadValue();
+            if (Application.platform == RuntimePlatform.LinuxEditor)
+            {
+                Settings.TranslationDrift ??= SpaceNavigatorLinuxDriver.Translation;
+                Settings.RotationDrift ??= SpaceNavigatorLinuxDriver.Rotation;
+            }
+            else
+            {
+                Settings.TranslationDrift ??= SpaceNavigatorHID.current.Translation.ReadValue();
+                Settings.RotationDrift ??= SpaceNavigatorHID.current.Rotation.ReadValue();
+            }
             
             _diyDeltaTime = EditorApplication.timeSinceStartup - _lastRefreshTime;
             _lastRefreshTime = EditorApplication.timeSinceStartup;
@@ -322,8 +342,16 @@ namespace SpaceNavigatorDriver
         private static void ReadDeviceData(OperationMode mode, out Vector3 translation, out Vector3 rotation)
         {
             // Read data from device
-            translation = SpaceNavigatorHID.current.Translation.ReadValue() - Settings.TranslationDrift.Value;
-            rotation = SpaceNavigatorHID.current.Rotation.ReadValue() - Settings.RotationDrift.Value;
+            if (Application.platform == RuntimePlatform.LinuxEditor)
+            {
+                translation = SpaceNavigatorLinuxDriver.Translation;
+                rotation = SpaceNavigatorLinuxDriver.Rotation;
+            }
+            else
+            {
+                translation = SpaceNavigatorHID.current.Translation.ReadValue() - Settings.TranslationDrift.Value;
+                rotation = SpaceNavigatorHID.current.Rotation.ReadValue() - Settings.RotationDrift.Value;
+            }
 
             // Damping
             if (Settings.PresentationMode)

@@ -1,16 +1,19 @@
 {
   "name": "com.pathightree.spacenavigator-driver",
-  "version": "2.0.0",
+  "version": "2.1.0",
   "displayName": "SpaceNavigator Driver",
   "description": "Driver for 3DConnexion devices\nThis driver lets you fly around your scene and allows you to move items around.\nIt can also be used at runtime via scripting.",
   "unity": "2019.1",
   "dependencies": {
     "com.unity.inputsystem": "1.0.2"
   },
- "repository": {
+  "_upm": {
+    "changelog": "- Released to Unity Asset Store\n"
+  },
+  "repository": {
     "type": "git",
     "url": "https://github.com/PatHightree/SpaceNavigator.git",
-    "revision": "220141cef5bc34da382552a32447b53ecda0ed6a"
+    "revision": "782a0318ee60b028d38a5dcdcb7aacd097dcc516"
   },
   "keywords": [
     "3DConnexion",
@@ -20,19 +23,23 @@
   "license": "MIT license",
   "author": {
     "name": "Patrick Hogenboom",
-    "email": "spacenavigator.driver@pm.me",
-    "url": "https://github.com/PatHightree/SpaceNavigator"
+    "url": "https://github.com/PatHightree/SpaceNavigator",
+    "email": "spacenavigator.driver@pm.me"
   },
-  "samples":[
-  {
-    "displayName": "Runtime samples",
-    "description": "A collection of samples to illustrate how to work with the driver at runtime via scripting.",
-    "path": "Samples~/Runtime samples"
-  },
-  {
-    "displayName": "Input Device Helper",
-    "description": "Tool which writes all HID device descriptors to disk.\nPlease supply this data when reporting an issue with an unsupported 3dconnexion device.",
-    "path": "Samples~/Input Device Helper"
-  }],
-  "type": "tool"
+  "samples": [
+    {
+      "displayName": "Runtime samples",
+      "description": "A collection of samples to illustrate how to work with the driver at runtime via scripting.",
+      "path": "Samples~/Runtime samples"
+    },
+    {
+      "displayName": "Input Device Helper",
+      "description": "Tool which writes all HID device descriptors to disk.\nPlease supply this data when reporting an issue with an unsupported 3dconnexion device.",
+      "path": "Samples~/Input Device Helper"
+    }
+  ],
+  "type": "tool",
+  "changelogUrl": "https://github.com/PatHightree/SpaceNavigator/blob/master/Changelog.md",
+  "documentationUrl": "https://github.com/PatHightree/SpaceNavigator/blob/master/README.md",
+  "licensesUrl": "https://github.com/PatHightree/SpaceNavigator/blob/master/License.md"
 }
